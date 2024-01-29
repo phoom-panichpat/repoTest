@@ -1,9 +1,7 @@
 import 'package:firebase_connection_test/firebase_options.dart';
-import 'package:firebase_connection_test/model.dart';
-import 'package:firebase_connection_test/repo.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() async {
@@ -38,21 +36,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  late String studentName, stuId, programId;
+  late double studentGPA;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  getName(name) {
+    studentName = name;
   }
 
-  final userRepo = Get.put(SnRepository());
+  getID(id) {
+    stuId = id;
+  }
 
-  final user =
-      const UserModel(sn: 'sn', dateTime: 'dateTime', location: 'location');
+  getPID(pid) {
+    programId = pid;
+  }
 
-  Future<void> createUser(UserModel user) async {
-    await userRepo.createUser(user);
+  getGPA(gpa) {
+    studentGPA = double.parse(gpa);
+  }
+
+  createData() {
+    debugPrint('create');
+  }
+
+  readData() {
+    debugPrint('read');
+  }
+
+  updateData() {
+    debugPrint('update');
+  }
+
+  deleteData() {
+    debugPrint('delete');
   }
 
   @override
@@ -63,23 +79,66 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextFormField(
+                decoration: const InputDecoration(labelText: "Name"),
+                onChanged: (String n) {
+                  getName(n);
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: "id"),
+                onChanged: (String sid) {
+                  getID(sid);
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: "program id"),
+                onChanged: (String pgId) {
+                  getPID(pgId);
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: "gpa"),
+                onChanged: (String sGPA) {
+                  getGPA(sGPA);
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        createData();
+                      },
+                      child: const Text('create')),
+                  ElevatedButton(
+                      onPressed: () {
+                        readData();
+                      },
+                      child: const Text('read')),
+                  ElevatedButton(
+                      onPressed: () {
+                        updateData();
+                      },
+                      child: const Text('update')),
+                  ElevatedButton(
+                      onPressed: () {
+                        deleteData();
+                      },
+                      child: const Text('delete')),
+                ],
+              )
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
